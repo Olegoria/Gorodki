@@ -1,0 +1,362 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Города</title>
+</head>
+
+<body>
+    <script>
+    ////////////////////////////
+    var play_player = 0,
+        numRows = document.getElementById("rows"),
+        rows = 85;
+
+    var pole_boy = [];
+
+    for (var i = 0; i < rows; i++) {
+        pole_boy[i] = [];
+        for (var j = 0; j < rows; j++) {
+            pole_boy[i][j] = new Object;
+            pole_boy[i][j].protect = false;
+            pole_boy[i][j].player = 0;
+            pole_boy[i][j].player2 = 0;
+        }
+    }
+
+
+    console.log(pole_boy);
+    addTable();
+
+    function addTable() {
+
+        play_player = 0,
+            numRows = document.getElementById("rows"),
+            rows = 85;
+
+        var body = document.querySelector("body"),
+            numColumns = numRows,
+            columns = rows,
+            width = 0,
+            height = width,
+            tr = "",
+            td = "",
+            firstTable = document.querySelector("table");
+
+        table = document.createElement("table"),
+            table.setAttribute("border", "1px");
+
+        table.setAttribute("width", width);
+        table.setAttribute("height", height);
+        for (var i = 0; i < rows; i++) {
+            tr = document.createElement("tr");
+            for (var j = 0; j < columns; j++) {
+                td = document.createElement("td");
+                text = document.createTextNode('');
+                td.appendChild(text);
+                tr.appendChild(td);
+                td.addEventListener("click", color_edit, false);
+            }
+            table.appendChild(tr);
+        }
+        if (firstTable == null) {
+            return body.appendChild(table);
+        } else {
+            var newTable = body.appendChild(table);
+            return document.body.replaceChild(newTable, firstTable);
+        }
+    }
+
+    pole();
+
+    function pole() {
+        var td = document.querySelectorAll('td');
+
+        for (var i = 0; i < rows; i++) {
+            td[i].style.background = 'grey';
+            td[td.length - 1 - i].style.background = 'grey';
+            td[i * rows].style.background = 'grey';
+            td[i * rows + rows - 1].style.background = 'grey';
+        }
+
+        for (var i = 0; i < rows; i++) {
+            pole_boy[0][i].protect = true;
+            pole_boy[rows - 1][i].protect = true;
+            pole_boy[i][0].protect = true;
+            pole_boy[i][rows - 1].protect = true;
+        }
+
+
+    }
+
+    function color_edit() {
+        for (var i = 0; i < pole_boy.length; i++) {
+            for (var j = 0; j < pole_boy[i].length; j++) {
+                if (pole_boy[i][j].player == 6) {
+                    pole_boy[i][j].player = 0;
+                }
+                if (pole_boy[i][j].player2 == 6) {
+                    pole_boy[i][j].player2 = 0;
+                }
+            }
+        }
+
+        if (pole_boy[$(this).parent('tr').index()][$(this).index()].protect == false) {
+            play_player++;
+
+            pole_boy[$(this).parent('tr').index()][$(this).index()].protect = true;
+
+
+            if (play_player % 2 == 1) {
+                this.style.background = 'red';
+                pole_boy[$(this).parent('tr').index()][$(this).index()].player = 1;
+                palayer1();
+            } else {
+                this.style.background = 'blue';
+                pole_boy[$(this).parent('tr').index()][$(this).index()].player2 = 1;
+                palayer2();
+            }
+        }
+    }
+
+    //////////////////////
+
+
+    function palayer1() {
+        var td = document.querySelectorAll('td');
+        pezdec();
+
+        function pezdec() {
+            for (var i = 0; i < pole_boy.length; i++) {
+                for (var j = 0; j < pole_boy[i].length; j++) {
+                    if (pole_boy[i][j].player == 0) {
+                        rec(i, j);
+                        return 0;
+                    }
+                }
+            }
+        }
+
+        function rec(x, y) {
+            if (pole_boy[x][y].player == 0) {
+                pole_boy[x][y].player = 6;
+                if (pole_boy[x + 1]) {
+                    if (pole_boy[x + 1][y].player == 0) {
+                        rec(x + 1, y);
+                    }
+                }
+                if (pole_boy[x - 1]) {
+                    if (pole_boy[x - 1][y].player == 0) {
+                        rec(x - 1, y);
+                    }
+                }
+                if (y + 1 < pole_boy[x].length) {
+                    if (pole_boy[x][y + 1].player == 0) {
+                        rec(x, y + 1);
+                    }
+                }
+                if (y > 0) {
+                    if (pole_boy[x][y - 1].player == 0) {
+                        rec(x, y - 1);
+                    }
+                }
+            }
+        }
+        player1_zapo();
+    }
+
+
+    function player1_zapo() {
+        for (var a = 0; a < 10; a++) {
+            pezdec1();
+
+            function pezdec1() {
+                for (var i = 0; i < pole_boy.length; i++) {
+                    for (var j = 0; j < pole_boy[i].length; j++) {
+                        if (pole_boy[i][j].player == 0) {
+                            rec_zal(i, j);
+                            return 0;
+                        }
+                    }
+                }
+            }
+
+            function rec_zal(x, y) {
+                if (pole_boy[x][y].player == 0) {
+                    pole_boy[x][y].player = 2;
+                    if (pole_boy[x + 1]) {
+                        if (pole_boy[x + 1][y].player == 0) {
+                            rec_zal(x + 1, y);
+                        }
+                    }
+                    if (pole_boy[x - 1]) {
+                        if (pole_boy[x - 1][y].player == 0) {
+                            rec_zal(x - 1, y);
+                        }
+                    }
+                    if (y + 1 < pole_boy[x].length) {
+                        if (pole_boy[x][y + 1].player == 0) {
+                            rec_zal(x, y + 1);
+                        }
+                    }
+                    if (y > 0) {
+                        if (pole_boy[x][y - 1].player == 0) {
+                            rec_zal(x, y - 1);
+                        }
+                    }
+                }
+            }
+        }
+        primenenie();
+
+        function primenenie() {
+            var td = document.querySelectorAll('td');
+
+            for (var i = 0; i < pole_boy.length; i++) {
+                for (var j = 0; j < pole_boy[i].length; j++) {
+                    if (pole_boy[i][j].player == 2) {
+                        pole_boy[i][j].player2 = 0;
+                        td[i * rows + j].style.background = 'rgba(255,0,0,0.3)';
+                        pole_boy[i][j].protect = true;
+                    }
+                }
+            }
+
+        }
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////
+
+
+    function palayer2() {
+        var td = document.querySelectorAll('td');
+        pezdec();
+
+        function pezdec() {
+            for (var i = 0; i < pole_boy.length; i++) {
+                for (var j = 0; j < pole_boy[i].length; j++) {
+                    if (pole_boy[i][j].player2 == 0) {
+                        rec(i, j);
+                        return 0;
+                    }
+                }
+            }
+        }
+
+        function rec(x, y) {
+            if (pole_boy[x][y].player2 == 0) {
+                pole_boy[x][y].player2 = 6;
+                if (pole_boy[x + 1]) {
+                    if (pole_boy[x + 1][y].player2 == 0) {
+                        rec(x + 1, y);
+                    }
+                }
+                if (pole_boy[x - 1]) {
+                    if (pole_boy[x - 1][y].player2 == 0) {
+                        rec(x - 1, y);
+                    }
+                }
+                if (y + 1 < pole_boy[x].length) {
+                    if (pole_boy[x][y + 1].player2 == 0) {
+                        rec(x, y + 1);
+                    }
+                }
+                if (y > 0) {
+                    if (pole_boy[x][y - 1].player2 == 0) {
+                        rec(x, y - 1);
+                    }
+                }
+            }
+        }
+        player2_zapo();
+    }
+
+
+    function player2_zapo() {
+        for (var a = 0; a < 10; a++) {
+            pezdec1();
+
+            function pezdec1() {
+                for (var i = 0; i < pole_boy.length; i++) {
+                    for (var j = 0; j < pole_boy[i].length; j++) {
+                        if (pole_boy[i][j].player2 == 0) {
+                            rec_zal(i, j);
+                            return 0;
+                        }
+                    }
+                }
+            }
+
+            function rec_zal(x, y) {
+                if (pole_boy[x][y].player2 == 0) {
+                    pole_boy[x][y].player2 = 2;
+                    if (pole_boy[x + 1]) {
+                        if (pole_boy[x + 1][y].player2 == 0) {
+                            rec_zal(x + 1, y);
+                        }
+                    }
+                    if (pole_boy[x - 1]) {
+                        if (pole_boy[x - 1][y].player2 == 0) {
+                            rec_zal(x - 1, y);
+                        }
+                    }
+                    if (y + 1 < pole_boy[x].length) {
+                        if (pole_boy[x][y + 1].player2 == 0) {
+                            rec_zal(x, y + 1);
+                        }
+                    }
+                    if (y > 0) {
+                        if (pole_boy[x][y - 1].player2 == 0) {
+                            rec_zal(x, y - 1);
+                        }
+                    }
+                }
+            }
+        }
+        primenenie();
+
+        function primenenie() {
+            var td = document.querySelectorAll('td');
+
+            for (var i = 0; i < pole_boy.length; i++) {
+                for (var j = 0; j < pole_boy[i].length; j++) {
+                    if (pole_boy[i][j].player2 == 2) {
+                        pole_boy[i][j].player = 0;
+                        td[i * rows + j].style.background = 'rgba(0,0,255,0.3)';
+                        pole_boy[i][j].protect = true;
+                    }
+                }
+            }
+
+        }
+    }
+    </script>
+    <script type="text/javascript" src="jquery/jquery-3.3.1.min.js"></script>
+    <style type="text/css">
+    table {
+        margin: auto;
+        border-collapse: collapse;
+        text-align: left;
+    }
+
+    th {
+        font-weight: normal;
+        color: white;
+    }
+
+    td {
+        color: #669;
+        border: 1px solid rgba(0, 0, 0, .4);
+        transition: .3s linear;
+        padding: 0.8vw;
+    }
+
+    .colored {
+        background-color: green;
+    }
+    </style>
+</body>
+
+</html>
